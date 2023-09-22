@@ -12,11 +12,11 @@ export const Welcome = styled.span`
 `;
 
 export const LogOutBtn = styled.button`
-  padding: 4px 8px;
+  padding: 6px 8px;
   font-weight: 900;
   font: inherit;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 18px;
   color: #fff;
   background: #3498db;
   transition: all 150ms ease-in-out;
