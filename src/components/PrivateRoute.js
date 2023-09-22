@@ -1,11 +1,10 @@
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from 'hooks/useAuth';
+import { authSelectors } from 'redux/auth/auth-selectors';
 
-// Компонент PrivateRoute відповідає за приватний маршрут, який доступний тільки для авторизованих користувачів
-export const PrivateRoute = ({ component: Component, redirectTo = '/' }) => {
-  const { isLoggedIn, isRefreshing } = useAuth();
-
-  const shouldRedirect = !isLoggedIn && !isRefreshing;
-
-  return shouldRedirect ? <Navigate to={redirectTo} /> : Component; // Перенаправляємо на redirectTo, якщо користувач не авторизований, інакше рендеримо компонент Component
+const PrivateRoute = ({ children, redirectTo = '/' }) => {
+  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
+  return isLoggedIn ? children : <Navigate to={redirectTo} />;
 };
+
+export default PrivateRoute;

@@ -1,50 +1,68 @@
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { FormWrapper, Label, Input, SubmitBtn } from './LoginForm.styled';
+
 import { useDispatch } from 'react-redux';
-import { logIn } from 'redux/auth/operations';
-import { Form, Label, Input, Button } from './LoginForm.styled';
+import { authOperations } from 'redux/auth/auth-operations';
 
-// Компонент LoginForm відповідає за форму авторизації користувача
 export const LoginForm = () => {
+  // ----controlled form
+  const emailInputId = nanoid();
+  const passwordInputId = nanoid();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChange = e => {
+    const { name, value } = e.currentTarget;
+    switch (name) {
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+      default:
+        return;
+    }
+  };
+  // ----
+  // ----form submit
   const dispatch = useDispatch();
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(authOperations.logIn({ email, password }));
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    const form = event.currentTarget;
-
-    // Викликаємо дію logIn з параметрами email та password, які отримуємо зі значень полів форми
-    dispatch(
-      logIn({
-        email: form.elements.email.value,
-        password: form.elements.password.value,
-      })
-    );
-    form.reset(); // Очищуємо значення полів форми після відправки
+    reset();
   };
 
+  const reset = () => {
+    setEmail('');
+    setPassword('');
+  };
+  // ----
+
   return (
-    <Form onSubmit={handleSubmit} autoComplete="off">
-      <Label>
-        Email
-        <Input
-          type="email"
-          name="email"
-          placeholder="Введіть адресу електронної пошти"
-          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          title="Будь ласка, введіть дійсну адресу електронної пошти"
-          required
-        />
-      </Label>
-      <Label>
-        Password
-        <Input
-          type="password"
-          name="password"
-          placeholder="Введіть пароль"
-          pattern="^[a-zA-Z0-9!@#$%^&*()-_=+`~[\]{}|:<>/?]+$"
-          title="Пароль повинен містити тільки латинські літери (як великі, так і малі), цифри та інші символи"
-          required
-        />
-      </Label>
-      <Button type="submit">Log In</Button>
-    </Form>
+    <FormWrapper onSubmit={handleSubmit}>
+      <Label htmlFor={emailInputId}>Email</Label>
+      <Input
+        type="email"
+        name="email"
+        required
+        id={emailInputId}
+        value={email}
+        onChange={handleChange}
+      />
+      <Label htmlFor={passwordInputId}>Password</Label>
+      <Input
+        type="password"
+        name="password"
+        required
+        id={passwordInputId}
+        value={password}
+        onChange={handleChange}
+      />
+      <SubmitBtn type="submit">Log In</SubmitBtn>
+    </FormWrapper>
   );
 };

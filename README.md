@@ -1,87 +1,63 @@
-Використовуй цей
-[шаблон React-проекту](https://github.com/goitacademy/react-homework-template#readme)
-як стартову точку своєї програми.
+# Phonebook application
 
-# Критерії приймання
+Phonebook application is a simple web application to add new contacts to a
+phonebook, filter them by name or delete. The application also requires
+registration by email and password. The backend part was set on
+https://connections-api.herokuapp.com/docs/ provided by GOIT.
 
-- Створений репозиторій `goit-react-hw-08-phonebook`
-- При здачі домашньої роботи є посилання: на вихідні файли та робочу сторінку
-  проекту на `GitHub Pages`
-- Під час запуску коду завдання в консолі відсутні помилки та попередження.
-- Для кожного компонента є окрема папка з файлом React-компонента та файлом
-  стилів
-- Для компонентів описані `propTypes`
+## Installation
 
-## Книга контактів
+To install the application just run:
 
-Додай у програму «Книга контактів» можливість реєстрації, логіна та оновлення
-користувача, а також роботу з приватною колекцією контактів.
+### `npm install`
 
-### Бекенд
+## Usage
 
-Для цього завдання є готовий бекенд. Ознайомся з документацією. Він підтримує
-всі необхідні операції з колекцією контактів, а також реєстрацію, логін та
-оновлення користувача за допомогою JWT. Використовуй його замість твого бекенда
-створеного через сервіс mockapi.io.
+1. Register or sign using proper link in the appbar
+2. Type name and phonenumber of your contact and add it to the phonebook
+3. To search a contact just start type the name in the searchbar input
 
-### Маршрутизація
+## Available Scripts
 
-Додай маршрутизацію з бібліотекою React Router. У програмі має бути кілька
-сторінок:
+In the project directory, you can run:
 
-- `/register` – публічний маршрут реєстрації нового користувача з формою
-- `/login` – публічний маршрут логіна існуючого користувача з формою
-- `/contacts` – приватний маршрут для роботи з колекцією контактів користувача
+### `npm start`
 
-Додай компонент навігації `<Navigation>` з посиланнями для переходу по
-маршрутах.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Меню користувача
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-Створи компонент `<UserMenu>`, що відображає пошту користувача і кнопку виходу з
-облікового запису. Ось як може виглядати його розмітка.
+## Deploy
 
-<div>
-  <p>mango@mail.com</p>
-  <button>Logout</button>
-</div>
+The production version of the project will automatically be linted, built, and
+deployed to GitHub Pages, in the `gh-pages` branch, every time the `main` branch
+is updated. For example, after a direct push or an accepted pull request. To do
+this, you need to edit the `homepage` field in the `package.json` file,
+replacing `your_username` and `your_repo_name` with your own, and submit the
+changes to GitHub.
 
-### Стилізація
+```json
+"homepage": "https://your_username.github.io/your_repo_name/"
+```
 
-Це фінальна версія програми, тому попрацюй над оформленням інтерфейсу. Можна
-використовувати бібліотеку стилізації або компонентів, наприклад
-[Chakra UI](https://chakra-ui.com/) або [Material-UI](https://material-ui.com/).
+Next, you need to go to the settings of the GitHub repository (`Settings` >
+`Pages`) and set the distribution of the production version of files from the
+`/root` folder of the `gh-pages` branch, if this was not done automatically.
 
----
+![GitHub Pages settings](./assets/repo-settings.png)
 
-npm install styled-components@5.3.10
+### Deployment status
 
-import styled from 'styled-components';
+The deployment status of the latest commit is displayed with an icon next to its
+ID.
 
----
+- **Yellow color** - the project is being built and deployed.
+- **Green color** - deployment completed successfully.
+- **Red color** - an error occurred during linting, build or deployment.
 
-npm i react-redux
+## Contributing
 
-import { Provider } from 'react-redux'
-
----
-
-npm i redux-persist
-
-import { PersistGate } from 'redux-persist/es/integration/react'
-
----
-
-npm i @reduxjs/toolkit
-
-npm install redux
-
-npm install @redux-devtools/extension
-
-npm i axios
-
----
-
-URL
-
-https://connections-api.herokuapp.com/
+Pull requests are welcome. For major changes, please open an issue first to
+discuss what you would like to change.

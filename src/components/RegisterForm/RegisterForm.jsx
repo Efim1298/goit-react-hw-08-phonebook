@@ -1,62 +1,85 @@
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { FormWrapper, Label, Input, SubmitBtn } from './RegisterForm.styled';
+
 import { useDispatch } from 'react-redux';
-import { register } from 'redux/auth/operations';
-import { Form, Label, Input, Button } from './RegisterForm.styles';
+import { authOperations } from 'redux/auth/auth-operations';
 
-// Компонент RegisterForm відповідає за форму реєстрації нового користувача
 export const RegisterForm = () => {
+  // ----controlled form
+  const nameInputId = nanoid();
+  const emailInputId = nanoid();
+  const passwordInputId = nanoid();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChange = e => {
+    const { name, value } = e.currentTarget;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+      default:
+        return;
+    }
+  };
+  // ----
+  // ----form submit
   const dispatch = useDispatch();
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(authOperations.register({ name, email, password }));
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    const form = event.currentTarget;
-
-    // Викликаємо дію register з параметрами name, email та password, які отримуємо зі значень полів форми
-    dispatch(
-      register({
-        name: form.elements.name.value,
-        email: form.elements.email.value,
-        password: form.elements.password.value,
-      })
-    );
-    form.reset(); // Очищуємо значення полів форми після відправки
+    reset();
   };
 
+  const reset = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
+  // ----
+
   return (
-    <Form onSubmit={handleSubmit} autoComplete="off">
-      <Label>
-        Username
-        <Input
-          type="text"
-          name="name"
-          placeholder="Введіть ім'я"
-          pattern="^[^\d]+$"
-          title="Ім'я має містити лише літери, апострофи, дефіси та відступи"
-          required
-        />
-      </Label>
-      <Label>
-        Email
-        <Input
-          type="email"
-          name="email"
-          placeholder="Введіть адресу електронної пошти"
-          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          title="Будь ласка, введіть дійсну адресу електронної пошти"
-          required
-        />
-      </Label>
-      <Label>
-        Password
-        <Input
-          type="password"
-          name="password"
-          placeholder="Введіть пароль"
-          pattern="^[a-zA-Z0-9!@#$%^&*()-_=+`~[\]{}|:<>/?]+$"
-          title="Пароль повинен містити тільки латинські літери (як великі, так і малі), цифри та інші символи"
-          required
-        />
-      </Label>
-      <Button type="submit">Register</Button>
-    </Form>
+    <FormWrapper onSubmit={handleSubmit}>
+      <Label htmlFor={nameInputId}>Name</Label>
+      <Input
+        type="text"
+        name="name"
+        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+        required
+        value={name}
+        id={nameInputId}
+        onChange={handleChange}
+      />
+      <Label htmlFor={emailInputId}>Email</Label>
+      <Input
+        type="email"
+        name="email"
+        required
+        id={emailInputId}
+        value={email}
+        onChange={handleChange}
+      />
+      <Label htmlFor={passwordInputId}>Password</Label>
+      <Input
+        type="password"
+        name="password"
+        required
+        id={passwordInputId}
+        value={password}
+        onChange={handleChange}
+      />
+      <SubmitBtn type="submit">Register</SubmitBtn>
+    </FormWrapper>
   );
 };

@@ -1,14 +1,19 @@
-import { Comment } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
+import { LoaderWrapper } from 'components/Loader/Loader.styled';
 
-export const Loader = () => (
-  <Comment
-    visible={true}
-    height="80"
-    width="80"
-    ariaLabel="comment-loading"
-    wrapperStyle={{}}
-    wrapperClass="comment-wrapper"
-    color="#fff"
-    backgroundColor="#F4442E"
-  />
-);
+export const Loader = () => {
+  return (
+    <LoaderWrapper>
+      <ThreeDots
+        height="50"
+        width="50"
+        radius="9"
+        color="steelblue"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+      />
+    </LoaderWrapper>
+  );
+};

@@ -1,49 +1,28 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
+import {
+  FormWrapper,
+  NameLabel,
+  NameInput,
+  NumberLabel,
+  NumberInput,
+  SubmitBtn,
+} from 'components/ContactForm/ContactForm.styled';
+
 import { useSelector, useDispatch } from 'react-redux';
-import { Filter } from 'components/Filter/Filter';
-import { selectContacts } from 'redux/contacts/selectors';
-import { addContacts } from 'redux/contacts/operations';
-import { Form, Label, Input, Button } from './ContactForm.styled';
-import { ReactComponent as AddIcon } from 'icons/add.svg';
+import { addContact } from 'redux/contacts/contacts-operations';
+import { selectContacts } from 'redux/contacts/contacts-selectors';
+import { checkName } from 'service-functions';
 
-//Генерація унікальних ідентифікаторів для полів форми.
-const nameInputId = nanoid();
-const numberInputId = nanoid();
-
-// Компонент ContactForm відповідає за форму додавання нового контакту
 export const ContactForm = () => {
+  // ----controlled form
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(selectContacts);
-  const dispatch = useDispatch();
 
-  // Обробка відправлення форми.
-  const handleSubmit = event => {
-    event.preventDefault();
-
-    // Перевіряємо, чи контакт з таким іменем вже існує в списку контактів
-    const isInContacts = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    );
-
-    // Перевіряє, чи існує контакт із таким самим ім'ям у списку контактів. Якщо контакт вже існує, виводиться попередження.
-    if (isInContacts) {
-      alert(`${name} вже в контактах☝️`);
-
-      return;
-    }
-
-    // Відправляємо дію для додавання нового контакту до Redux store
-    dispatch(addContacts({ name, number }));
-
-    setName('');
-    setNumber('');
-  };
-
-  // Обробка зміни значень полів форми.
-  const handleChange = event => {
-    const { name, value } = event.currentTarget;
+  const handleChange = e => {
+    const { name, value } = e.currentTarget;
     switch (name) {
       case 'name':
         setName(value);
@@ -55,46 +34,54 @@ export const ContactForm = () => {
         return;
     }
   };
+  // ----
+  // ----form submit
+  const contactItems = useSelector(selectContacts);
+  const dispatch = useDispatch();
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const contact = {
+      name: e.target.elements.name.value,
+      number: e.target.elements.number.value,
+    };
+    if (!checkName(name, contactItems)) {
+      dispatch(addContact(contact));
+    }
+    reset();
+  };
+
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
+  // ----
 
   return (
-    <>
-      <Form onSubmit={handleSubmit}>
-        <Label htmlFor={nameInputId}>
-          Name
-          <Input
-            type="text"
-            name="name"
-            placeholder="Введіть ім'я"
-            value={name}
-            onChange={handleChange}
-            pattern="^[^\d]+$"
-            title="Ім'я має містити лише літери, апострофи, дефіси та відступи"
-            required
-          />
-        </Label>
-
-        <Label htmlFor={numberInputId}>
-          Number
-          <Input
-            type="tel"
-            name="number"
-            placeholder="Введіть номер телефону"
-            value={number}
-            onChange={handleChange}
-            pattern="\+\d{12}"
-            minlength="13"
-            maxlength="13"
-            title="Номер телефону має починатися з +, а потім 12 цифр"
-            required
-          />
-        </Label>
-
-        <Button type="submit">
-          <AddIcon fill="#f08080" width="25" height="25" />
-          Add contact{' '}
-        </Button>
-      </Form>
-      <Filter />
-    </>
+    <FormWrapper onSubmit={handleSubmit}>
+      <NameLabel htmlFor={nameInputId}>Name</NameLabel>
+      <NameInput
+        type="text"
+        name="name"
+        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+        required
+        value={name}
+        id={nameInputId}
+        onChange={handleChange}
+      />
+      <NumberLabel htmlFor={numberInputId}>Number</NumberLabel>
+      <NumberInput
+        type="tel"
+        name="number"
+        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+        required
+        id={numberInputId}
+        value={number}
+        onChange={handleChange}
+      />
+      <SubmitBtn type="submit">Add contact</SubmitBtn>
+    </FormWrapper>
   );
 };
